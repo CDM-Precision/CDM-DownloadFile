@@ -99,6 +99,8 @@ function Write-Log {
     }
 }
 
+
+
 <#
 .SYNOPSIS
 Logs the start or end of a function execution for better traceability during script execution.
@@ -168,6 +170,8 @@ function Write-FunctionHeaderOrFooter {
         Write-Log -Message "===== END $CmdletName =====" -Source ${CmdletName} -Severity 1
     }
 }
+
+
 
 <#
 .SYNOPSIS

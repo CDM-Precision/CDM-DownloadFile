@@ -3,7 +3,7 @@ external help file: DownloadFile-help.xml
 Module Name: DownloadFile
 online version:
 schema: 2.0.0
---- 
+---
 
 # Get-CurrentFileSize
 
@@ -13,7 +13,7 @@ Retrieves the size of a specified file in bytes.
 ## SYNTAX
 
 ```
-Get-CurrentFileSize [-FilePath] <String> [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Get-CurrentFileSize [-FilePath] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,20 +27,23 @@ logging, or conditional operations based on file size.
 ### EXAMPLE 1
 ```
 Get-CurrentFileSize -FilePath "C:\Temp\example.txt"
-Returns the size of example.txt in bytes.
 ```
+
+Returns the size of example.txt in bytes.
 
 ### EXAMPLE 2
 ```
 "C:\Temp\file1.txt", "C:\Temp\file2.txt" | Get-CurrentFileSize
-Returns sizes for multiple files piped to the function.
 ```
+
+Returns sizes for multiple files piped to the function.
 
 ### EXAMPLE 3
 ```
 if ((Get-CurrentFileSize -FilePath "report.pdf") -gt 1MB) { "File is large" }
-Demonstrates using the function in a conditional statement with size comparison.
 ```
+
+Demonstrates using the function in a conditional statement with size comparison.
 
 ## PARAMETERS
 
@@ -60,24 +63,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ProgressAction
-{{Fill ProgressAction Description}}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

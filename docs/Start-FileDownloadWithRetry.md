@@ -3,7 +3,7 @@ external help file: DownloadFile-help.xml
 Module Name: DownloadFile
 online version:
 schema: 2.0.0
---- 
+---
 
 # Start-FileDownloadWithRetry
 
@@ -14,7 +14,7 @@ Downloads a file from a URL with automatic retry logic on failure.
 
 ```
 Start-FileDownloadWithRetry [-URL] <String> [-OutFile] <String> [[-RetryCount] <Int32>] [-Validate]
- [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ [[-ChecksumType] <String>] [[-Checksum] <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -40,6 +40,36 @@ Downloads file.zip with validation enabled and up to 5 retry attempts.
 
 ## PARAMETERS
 
+### -Checksum
+{{ Fill Checksum Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 5
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ChecksumType
+{{ Fill ChecksumType Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 4
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -OutFile
 Specifies the local path where the downloaded file will be saved.
 This parameter is mandatory.
@@ -51,21 +81,6 @@ Aliases:
 
 Required: True
 Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ProgressAction
-{{Fill ProgressAction Description}}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
-
-Required: False
-Position: Named
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -120,8 +135,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

@@ -3,7 +3,7 @@ external help file: DownloadFile-help.xml
 Module Name: DownloadFile
 online version:
 schema: 2.0.0
---- 
+---
 
 # Test-PartialFileHash
 
@@ -13,8 +13,7 @@ Verifies a file's partial hash against an expected value using a specified algor
 ## SYNTAX
 
 ```
-Test-PartialFileHash [-FilePath] <String> [-ExpectedHash] <String> [-HashType] <String>
- [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Test-PartialFileHash [-FilePath] <String> [-Checksum] <String> [-ChecksumType] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,31 +27,33 @@ The function supports multiple hash algorithms.
 ### EXAMPLE 1
 ```
 Test-PartialFileHash -FilePath "C:\Temp\partial.zip" -ExpectedHash "A94A8FE5CC..." -HashType SHA256
-Verifies if partial.zip matches the expected SHA256 hash.
 ```
+
+Verifies if partial.zip matches the expected SHA256 hash.
 
 ### EXAMPLE 2
 ```
 $files = Get-ChildItem "C:\Downloads\*.part"
-PS C:\> $files | Test-PartialFileHash -ExpectedHash "B94A8FE5CC..." -HashType SHA1
-Verifies multiple partial download files against an expected SHA1 hash.
 ```
+
+PS C:\\\> $files | Test-PartialFileHash -ExpectedHash "B94A8FE5CC..." -HashType SHA1
+Verifies multiple partial download files against an expected SHA1 hash.
 
 ### EXAMPLE 3
 ```
 if (Test-PartialFileHash "setup.exe" "C45D..." "MD5") {
->>     Write-Output "File verification successful"
->> } else {
->>     Write-Output "Verification failed"
->> }
-Demonstrates conditional usage with positional parameters.
 ```
+
+\>\>     Write-Output "File verification successful"
+\>\> } else {
+\>\>     Write-Output "Verification failed"
+\>\> }
+Demonstrates conditional usage with positional parameters.
 
 ## PARAMETERS
 
-### -ExpectedHash
-The expected hash value to compare against.
-Must be provided in hexadecimal format.
+### -Checksum
+{{ Fill Checksum Description }}
 
 ```yaml
 Type: String
@@ -61,6 +62,21 @@ Aliases:
 
 Required: True
 Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ChecksumType
+{{ Fill ChecksumType Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 3
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -82,40 +98,8 @@ Accept pipeline input: True (ByPropertyName, ByValue)
 Accept wildcard characters: False
 ```
 
-### -HashType
-The cryptographic hash algorithm to use for verification.
-Supported algorithms: SHA1, SHA256, SHA384, SHA512, MD5
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 3
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ProgressAction
-{{Fill ProgressAction Description}}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

@@ -3,7 +3,7 @@ external help file: DownloadFile-help.xml
 Module Name: DownloadFile
 online version:
 schema: 2.0.0
---- 
+---
 
 # Remove-DownloadedFile
 
@@ -13,8 +13,7 @@ Safely removes downloaded files with logging and error handling.
 ## SYNTAX
 
 ```
-Remove-DownloadedFile [-downloadedFilePath] <String> [-ProgressAction <ActionPreference>] [-WhatIf] [-Confirm]
- [<CommonParameters>]
+Remove-DownloadedFile [-downloadedFilePath] <String> [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -27,20 +26,23 @@ including files, directories, and read-only items.
 ### EXAMPLE 1
 ```
 Remove-DownloadedFile -downloadedFilePath "C:\Downloads\tempfile.zip"
-Removes the specified file and logs the operation.
 ```
+
+Removes the specified file and logs the operation.
 
 ### EXAMPLE 2
 ```
 Get-ChildItem "C:\Temp\*.tmp" | Remove-DownloadedFile
-Removes all .tmp files in C:\Temp directory through pipeline input.
 ```
+
+Removes all .tmp files in C:\Temp directory through pipeline input.
 
 ### EXAMPLE 3
 ```
 Remove-DownloadedFile "C:\PartialDownloads\*" -ErrorAction Continue
-Attempts to remove all files in the PartialDownloads directory, continuing on errors.
 ```
+
+Attempts to remove all files in the PartialDownloads directory, continuing on errors.
 
 ## PARAMETERS
 
@@ -58,21 +60,6 @@ Required: True
 Position: 1
 Default value: None
 Accept pipeline input: True (ByPropertyName, ByValue)
-Accept wildcard characters: False
-```
-
-### -ProgressAction
-{{Fill ProgressAction Description}}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
@@ -108,8 +95,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

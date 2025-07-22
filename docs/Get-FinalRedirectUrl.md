@@ -3,7 +3,7 @@ external help file: DownloadFile-help.xml
 Module Name: DownloadFile
 online version: https://learn.microsoft.com/en-us/dotnet/api/system.net.webrequest
 schema: 2.0.0
---- 
+---
 
 # Get-FinalRedirectUrl
 
@@ -13,7 +13,7 @@ Resolves the final URL after following all HTTP redirects.
 ## SYNTAX
 
 ```
-Get-FinalRedirectUrl [-Url] <String> [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Get-FinalRedirectUrl [-Url] <String> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -25,31 +25,18 @@ It's useful for checking where shortened URLs or redirected links ultimately lea
 ### EXAMPLE 1
 ```
 Get-FinalRedirectUrl -Url "https://bit.ly/example"
-Returns the final destination URL after following all redirects from the bit.ly shortened URL.
 ```
+
+Returns the final destination URL after following all redirects from the bit.ly shortened URL.
 
 ### EXAMPLE 2
 ```
 "https://tinyurl.com/sample", "http://goo.gl/example" | Get-FinalRedirectUrl
-Processes multiple URLs from the pipeline and returns their final destination URLs.
 ```
+
+Processes multiple URLs from the pipeline and returns their final destination URLs.
 
 ## PARAMETERS
-
-### -ProgressAction
-{{Fill ProgressAction Description}}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
 
 ### -Url
 The initial URL to check for redirects.
@@ -68,8 +55,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

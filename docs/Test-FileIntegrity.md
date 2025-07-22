@@ -3,7 +3,7 @@ external help file: DownloadFile-help.xml
 Module Name: DownloadFile
 online version:
 schema: 2.0.0
---- 
+---
 
 # Test-FileIntegrity
 
@@ -13,8 +13,8 @@ Validates the integrity of a downloaded file by checking its size and hash again
 ## SYNTAX
 
 ```
-Test-FileIntegrity [-fileSize] <Int64> [-downloadedFilePath] <String> [-ProgressAction <ActionPreference>]
- [<CommonParameters>]
+Test-FileIntegrity [-fileSize] <Int64> [-downloadedFilePath] <String> [-ChecksumType <String>]
+ [-Checksum <String>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -30,18 +30,50 @@ If either check fails, the downloaded file is automatically removed.
 ### EXAMPLE 1
 ```
 Test-FileIntegrity -fileSize 1048576 -downloadedFilePath "C:\Downloads\package.zip"
-Verifies if package.zip is exactly 1MB in size and has the correct hash.
 ```
+
+Verifies if package.zip is exactly 1MB in size and has the correct hash.
 
 ### EXAMPLE 2
 ```
 $expectedSize = 5242880 # 5MB
-PS C:\> $downloadedFile = "C:\Temp\setup.exe"
-PS C:\> Test-FileIntegrity $expectedSize $downloadedFile
-Shows positional parameter usage to verify setup.exe is 5MB with correct hash.
 ```
 
+PS C:\\\> $downloadedFile = "C:\Temp\setup.exe"
+PS C:\\\> Test-FileIntegrity $expectedSize $downloadedFile
+Shows positional parameter usage to verify setup.exe is 5MB with correct hash.
+
 ## PARAMETERS
+
+### -Checksum
+{{ Fill Checksum Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ChecksumType
+{{ Fill ChecksumType Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -downloadedFilePath
 The path to the downloaded file that needs verification.
@@ -74,24 +106,8 @@ Accept pipeline input: True (ByValue)
 Accept wildcard characters: False
 ```
 
-### -ProgressAction
-{{Fill ProgressAction Description}}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

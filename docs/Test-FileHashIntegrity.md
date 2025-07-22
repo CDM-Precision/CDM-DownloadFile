@@ -3,7 +3,7 @@ external help file: DownloadFile-help.xml
 Module Name: DownloadFile
 online version:
 schema: 2.0.0
---- 
+---
 
 # Test-FileHashIntegrity
 
@@ -13,8 +13,8 @@ Verifies the integrity of a file by comparing its cryptographic hash with an exp
 ## SYNTAX
 
 ```
-Test-FileHashIntegrity [-origHash] <String> [-Type] <String> [-downloadedFilePath] <String>
- [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Test-FileHashIntegrity [-Checksum] <String> [-ChecksumType] <String> [-downloadedFilePath] <String>
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -28,26 +28,59 @@ and authenticity after downloads or transfers.
 ### EXAMPLE 1
 ```
 Test-FileHashIntegrity -origHash "A94A8FE5CC..." -Type SHA256 -downloadedFilePath "C:\Downloads\package.zip"
-Verifies if package.zip has the expected SHA256 hash value.
 ```
+
+Verifies if package.zip has the expected SHA256 hash value.
 
 ### EXAMPLE 2
 ```
 $expectedHash = "B94A8FE5CC..."
-PS C:\> $filePath = "setup.exe"
-PS C:\> Test-FileHashIntegrity $expectedHash SHA1 $filePath
-Shows positional parameter usage to verify setup.exe against an expected SHA1 hash.
 ```
+
+PS C:\\\> $filePath = "setup.exe"
+PS C:\\\> Test-FileHashIntegrity $expectedHash SHA1 $filePath
+Shows positional parameter usage to verify setup.exe against an expected SHA1 hash.
 
 ### EXAMPLE 3
 ```
 Get-ChildItem *.iso | ForEach-Object {
->>     Test-FileHashIntegrity -origHash $_.Hash -Type SHA512 -downloadedFilePath $_.FullName
->> }
-Demonstrates verifying multiple files with their stored hash values.
 ```
 
+\>\>     Test-FileHashIntegrity -origHash $_.Hash -Type SHA512 -downloadedFilePath $_.FullName
+\>\> }
+Demonstrates verifying multiple files with their stored hash values.
+
 ## PARAMETERS
+
+### -Checksum
+{{ Fill Checksum Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ChecksumType
+{{ Fill ChecksumType Description }}
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
 
 ### -downloadedFilePath
 The path to the file whose integrity needs to be verified.
@@ -65,56 +98,8 @@ Accept pipeline input: True (ByPropertyName, ByValue)
 Accept wildcard characters: False
 ```
 
-### -origHash
-The expected hash value to compare against.
-This should be provided by a trusted source.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -ProgressAction
-{{Fill ProgressAction Description}}
-
-```yaml
-Type: ActionPreference
-Parameter Sets: (All)
-Aliases: proga
-
-Required: False
-Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Type
-The cryptographic hash algorithm to use for verification.
-Supported algorithms: SHA1, SHA256, SHA384, SHA512, MD5
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 2
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable.
-For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 
