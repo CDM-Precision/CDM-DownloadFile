@@ -1,3 +1,59 @@
+<#
+.SYNOPSIS
+Writes log messages to the host, a file, or both with optional severity levels and source tags.
+
+.DESCRIPTION
+The Write-Log function logs messages to either the PowerShell host, a file, or both, depending on the selected output mode.
+It allows specifying a severity level and a source to categorize messages.
+Each log entry includes a timestamp, source, message content, and severity code.
+
+.PARAMETER Message
+The log message to be recorded. This parameter is mandatory.
+
+.PARAMETER Severity
+An integer representing the severity level of the message:
+1 = Info (Blue)
+2 = Warning (Yellow)
+3 = Error (Red)
+Defaults to 1 (Info) if not specified.
+
+.PARAMETER Source
+A string representing the source or component of the message.
+If not provided, defaults to "General".
+
+.PARAMETER LogOutput
+Determines where the log message is output.
+Acceptable values:
+- "Host"  : Output only to the PowerShell host.
+- "File"  : Output only to the log file.
+- "Full"  : Output to both the host and the log file.
+Defaults to "Host".
+
+.PARAMETER LogFilePath
+Specifies the file path to which log entries will be written when using "File" or "Full" output modes.
+Defaults to "$PSScriptRoot\logfile.log".
+
+.EXAMPLE
+Write-Log -Message "Script started"
+
+Logs an informational message to the host with default settings.
+
+.EXAMPLE
+Write-Log -Message "User not found" -Severity 2 -Source "Authentication" -LogOutput "Full"
+
+Logs a warning message from the "Authentication" source both to the host and to the log file.
+
+.EXAMPLE
+Write-Log -Message "Unhandled exception" -Severity 3 -LogOutput "File" -LogFilePath "C:\Logs\app.log"
+
+Logs an error message to the specified log file without writing to the host.
+
+.NOTES
+Author: Peter Rinnenbach
+Created: 2025-07-22
+This function supports structured logging using a custom delimiter (`0) for easier parsing.
+
+#>
 function Write-Log {
     [CmdletBinding()]
     param(
@@ -12,7 +68,7 @@ function Write-Log {
 
         [Parameter(Mandatory = $false)]
         [ValidateSet("Host", "File", "Full")]
-        [string]$Output = "Host",
+        [string]$LogOutput = "Host",
 
         [Parameter(Mandatory = $false)]
         [string]$LogFilePath = "$PSScriptRoot\logfile.log"
@@ -43,6 +99,51 @@ function Write-Log {
     }
 }
 
+<#
+.SYNOPSIS
+Logs the start or end of a function execution for better traceability during script execution.
+
+.DESCRIPTION
+The Write-FunctionHeaderOrFooter function helps with structured logging by writing standardized "START" and "END" log entries for a given cmdlet or function.
+It optionally logs the parameters passed to the function for debugging and auditing purposes.
+This is especially useful for tracking the flow of complex scripts or modules.
+
+.PARAMETER CmdletName
+The name of the cmdlet or function being logged. This is a required parameter and is used as the source tag in the log entries.
+
+.PARAMETER CmdletBoundParameters
+An optional hashtable of the parameters that were passed to the cmdlet or function.
+If provided and Header is specified, the parameters and their values will be logged.
+
+.PARAMETER Header
+Switch indicating that the function should log the start of execution.
+If set, a "START" message is logged, along with any provided parameters.
+
+.PARAMETER Footer
+Switch indicating that the function should log the end of execution.
+If set, an "END" message is logged.
+
+.EXAMPLE
+Write-FunctionHeaderOrFooter -CmdletName "Get-User" -Header -CmdletBoundParameters $PSBoundParameters
+
+Logs a start message for the "Get-User" function, along with its input parameters.
+
+.EXAMPLE
+Write-FunctionHeaderOrFooter -CmdletName "Get-User" -Footer
+
+Logs an end message for the "Get-User" function.
+
+.EXAMPLE
+Write-FunctionHeaderOrFooter -CmdletName "Install-Software" -Header
+
+Logs a start message for the "Install-Software" function without listing parameters.
+
+.NOTES
+Author: Peter Rinnenbach
+Created: 2025-07-22  
+Intended for use with the Write-Log function for consistent structured logging across scripts.
+
+#>
 function Write-FunctionHeaderOrFooter {
     param(
         [Parameter(Mandatory = $true)]
@@ -55,16 +156,16 @@ function Write-FunctionHeaderOrFooter {
         [Switch]$Footer
     )
     if ($Header) {
-        Write-Host -ForegroundColor Blue "`n===== START $CmdletName ====="
+        Write-Log -Message "`n===== START $CmdletName =====" -Source ${CmdletName} -Severity 1
         if ($CmdletBoundParameters) {
-            Write-Host -ForegroundColor Blue "Parameters:"
+            Write-Log -Message "Parameters:" -Source ${CmdletName} -Severity 1
             $CmdletBoundParameters.GetEnumerator() | ForEach-Object {
-                Write-Host -ForegroundColor Blue "  $($_.Key): $($_.Value)"
+                Write-Log -Message "  $($_.Key): $($_.Value)" -Source ${CmdletName} -Severity 1
             }
         }
     }
     if ($Footer) {
-        Write-Host -ForegroundColor Blue "===== END $CmdletName ====="
+        Write-Log -Message "===== END $CmdletName =====" -Source ${CmdletName} -Severity 1
     }
 }
 
