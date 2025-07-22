@@ -3,12 +3,44 @@ function Write-Log {
     param(
         [Parameter(Mandatory = $true, Position = 0)]
         [String]$Message,
+
         [Parameter(Mandatory = $false)]
         [Int32]$Severity = 1,
+
         [Parameter(Mandatory = $false)]
-        [String]$Source = ""
+        [String]$Source = "",
+
+        [Parameter(Mandatory = $false)]
+        [ValidateSet("Host", "File", "Full")]
+        [string]$Output = "Host",
+
+        [Parameter(Mandatory = $false)]
+        [string]$LogFilePath = "$PSScriptRoot\logfile.log"
     )
-    Write-Host -ForegroundColor Blue "[$Source] $Message"
+    
+    $timestamp = Get-Date -Format "MM-dd-yyyy HH:mm:ss.fff"
+    $component = if ($Source -ne "") { $Source } else { "General" }
+    $logLine = "$timestamp`0$component`0$Message`0$Severity"
+
+    switch ($Severity) {
+        1 { $color = "Blue" }    # Info
+        2 { $color = "Yellow" }  # Warning
+        3 { $color = "Red" }     # Error
+        default { $color = "White" }
+    }
+
+    switch ($Output) {
+        "Host" {
+            Write-Host -ForegroundColor $color "[$component] $Message"
+        }
+        "File" {
+            Add-Content -Path $LogFilePath -Value $logLine
+        }
+        "Full" {
+            Write-Host -ForegroundColor $color "[$component] $Message"
+            Add-Content -Path $LogFilePath -Value $logLine
+        }
+    }
 }
 
 function Write-FunctionHeaderOrFooter {
