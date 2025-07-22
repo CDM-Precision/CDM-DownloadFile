@@ -1,4 +1,4 @@
-# DownloadFile.ps1
+# CDM - DownloadFile
 
 This PowerShell module enables reliable file downloads with built-in file integrity verification, including hash checking and detailed logging. It is particularly useful for automated deployments, software installations, or any scripted environment where dependable downloading and diagnostics are critical.
 

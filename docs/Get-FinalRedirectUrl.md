@@ -3,7 +3,7 @@ external help file: DownloadFile-help.xml
 Module Name: DownloadFile
 online version: https://learn.microsoft.com/en-us/dotnet/api/system.net.webrequest
 schema: 2.0.0
----
+--- 
 
 # Get-FinalRedirectUrl
 
