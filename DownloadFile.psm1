@@ -249,7 +249,12 @@ function Test-FileIntegrity {
         
         [Parameter(Mandatory=$true, Position=1, ValueFromPipelineByPropertyName=$true)]
         [ValidateNotNullOrEmpty()]
-        [string]$downloadedFilePath
+        [string]$downloadedFilePath,
+		[Parameter(Mandatory = $false)]
+		[string]$ChecksumType,
+
+		[Parameter(Mandatory = $false)]
+		[string]$Checksum
     )
 
     Begin {
@@ -280,7 +285,7 @@ function Test-FileIntegrity {
 
             # Check file hash if size matches
             Write-Log -Message "Starting hash verification..." -Severity 1 -Source ${CmdletName}
-            $hashResult = Test-FileHashIntegrity -origHash $publisherHash -Type $publisherHType -downloadedFilePath $downloadedFilePath
+            $hashResult = Test-FileHashIntegrity -Checksum $Checksum -ChecksumType $ChecksumType -downloadedFilePath $downloadedFilePath
             
             if (-not $hashResult) {
                 Remove-DownloadedFile -downloadedFilePath $downloadedFilePath
@@ -368,11 +373,11 @@ function Test-FileHashIntegrity {
     Param (
         [Parameter(Mandatory=$true, Position=0)]
         [ValidateNotNullOrEmpty()]
-        [String]$origHash,
+        [String]$Checksum,
 
         [Parameter(Mandatory=$true, Position=1)]
         [ValidateSet("SHA1","SHA256", "SHA384", "SHA512", "MD5")]
-        [String]$Type,
+        [String]$ChecksumType,
 
         [Parameter(Mandatory=$true, Position=2, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true)]
         [ValidateScript({
@@ -393,13 +398,13 @@ function Test-FileHashIntegrity {
     Process {
         try {
             $cpath = Convert-Path $downloadedFilePath
-            Write-Log -Message "Calculating $Type hash for file: $cpath" -Severity 1 -Source ${CmdletName}
+            Write-Log -Message "Calculating $ChecksumType hash for file: $cpath" -Severity 1 -Source ${CmdletName}
             
-            $localFileHash = (Get-FileHash -Algorithm $Type -Path $cpath -ErrorAction Stop).Hash
+            $localFileHash = (Get-FileHash -Algorithm $ChecksumType -Path $cpath -ErrorAction Stop).Hash
             Write-Log -Message "Calculated hash: $localFileHash" -Severity 1 -Source ${CmdletName}
-            Write-Log -Message "Expected hash: $origHash" -Severity 1 -Source ${CmdletName}
+            Write-Log -Message "Expected hash: $Checksum" -Severity 1 -Source ${CmdletName}
 
-            $result = $origHash.ToUpper() -eq $localFileHash.ToUpper()
+            $result = $Checksum.ToUpper() -eq $localFileHash.ToUpper()
             
             if ($result) {
                 Write-Log -Message "Hash verification successful" -Severity 1 -Source ${CmdletName}
@@ -497,11 +502,11 @@ function Test-PartialFileHash {
 
         [Parameter(Mandatory=$true, Position=1)]
         [ValidatePattern('^[0-9A-Fa-f]+$')]
-        [String]$ExpectedHash,
+        [String]$Checksum,
 
         [Parameter(Mandatory=$true, Position=2)]
         [ValidateSet("SHA1","SHA256", "SHA384", "SHA512", "MD5")]
-        [String]$HashType
+        [String]$ChecksumType
     )
 
     Begin {
@@ -513,17 +518,17 @@ function Test-PartialFileHash {
         try {
             Write-Log -Message "Starting partial hash verification for: $FilePath" -Severity 1 -Source ${CmdletName}
             
-            $computedHash = (Get-FileHash -Algorithm $HashType -Path $FilePath -ErrorAction Stop).Hash
-            Write-Log -Message "Computed $HashType hash: $computedHash" -Severity 1 -Source ${CmdletName}
-            Write-Log -Message "Expected hash: $ExpectedHash" -Severity 1 -Source ${CmdletName}
-
-            $result = $computedHash -eq $ExpectedHash
+            $computedHash = (Get-FileHash -Algorithm $ChecksumType -Path $FilePath -ErrorAction Stop).Hash
+            Write-Log -Message "Computed $ChecksumType hash: $computedHash" -Severity 1 -Source ${CmdletName}
+            Write-Log -Message "Expected hash: $Checksum" -Severity 1 -Source ${CmdletName}
+	
+			$result = $Checksum.ToUpper() -eq $computedHash.ToUpper()
             
             if ($result) {
                 Write-Log -Message "Hash verification successful" -Severity 1 -Source ${CmdletName}
             } else {
                 Write-Log -Message "Hash verification failed" -Severity 3 -Source ${CmdletName}
-                Write-Log -Message "Expected: $ExpectedHash`nActual: $computedHash" -Severity 3 -Source ${CmdletName}
+                Write-Log -Message "Expected: $Checksum`nActual: $computedHash" -Severity 3 -Source ${CmdletName}
             }
             
             return $result
@@ -678,7 +683,11 @@ function Invoke-FileDownload {
         [Parameter(Mandatory = $true)]
         [String]$OutFile,
         [Parameter(Mandatory = $false)]
-        [switch]$Validate
+        [switch]$Validate,
+		[Parameter(Mandatory = $false)]
+		[string]$ChecksumType,
+		[Parameter(Mandatory = $false)]
+		[string]$Checksum
     )
     Begin {
         [String]${CmdletName} = $PSCmdlet.MyInvocation.MyCommand.Name
@@ -687,7 +696,7 @@ function Invoke-FileDownload {
         $isPartialFileValid = $false
         if ($Validate -and (Test-Path -Path $OutFile)) {
             Write-Log -Message "Partially downloaded file found. Verifying hash..." -Severity 1 -Source ${CmdletName}
-            $isPartialFileValid = Test-PartialFileHash -FilePath $OutFile -ExpectedHash $publisherHash -HashType $publisherHType
+            $isPartialFileValid = Test-PartialFileHash -FilePath $OutFile -Checksum $Checksum -ChecksumType $ChecksumType
             if ($isPartialFileValid) {
                 Write-Log -Message "Partial file is valid. Skipping download..." -Severity 1 -Source ${CmdletName}
                 return $true
@@ -707,7 +716,11 @@ function Invoke-FileDownload {
             If (Get-Command Start-BitsTransfer -ErrorAction SilentlyContinue) {
                 try {
                     $link = Get-FinalRedirectUrl $URL
-                    $requestedFile = (Invoke-WebRequest $link -Method Head).Headers
+                    if ($PSVersionTable.PSVersion.Major -lt 6) {
+						$requestedFile = (Invoke-WebRequest $link -Method Head -UseBasicParsing).Headers
+					} else {
+						$requestedFile = (Invoke-WebRequest $link -Method Head).Headers
+					}
                     #$downloadSize = $requestedFile.'Content-Length'
                     $downloadSize = [Int64]::Parse(($requestedFile.'Content-Length' | Select-Object -First 1))
                     Write-Log -Message "Selected download method: BitsTransfer" -Severity 1 -Source ${CmdletName}
@@ -728,7 +741,7 @@ function Invoke-FileDownload {
 
                 if ($Validate) {
                     Write-Log -Message "File integrity check starting" -Severity 1 -Source ${CmdletName}
-                    Test-FileIntegrity -fileSize $downloadSize -downloadedFilePath $OutFile | Out-Null
+                    Test-FileIntegrity -fileSize $downloadSize -downloadedFilePath $OutFile -Checksum $Checksum -ChecksumType $Checksumtype | Out-Null
                 }
                 return $true
             }
@@ -800,7 +813,11 @@ function Start-FileDownloadWithRetry {
         [Parameter(Mandatory = $false)]
         [int]$RetryCount = 3,
         [Parameter(Mandatory = $false)]
-        [switch]$Validate
+        [switch]$Validate,
+		[Parameter(Mandatory = $false)]
+		[string]$ChecksumType,
+		[Parameter(Mandatory = $false)]
+		[string]$Checksum
     )
     Begin {
         [String]${CmdletName} = $PSCmdlet.MyInvocation.MyCommand.Name
@@ -811,7 +828,7 @@ function Start-FileDownloadWithRetry {
         while ($attempt -le $RetryCount) {
             Write-Log -Message "Attempt $attempt of $RetryCount..." -Severity 1 -Source ${CmdletName}
             try {
-                $result = Invoke-FileDownload -URL $URL -OutFile $OutFile -Validate:$Validate
+                $result = Invoke-FileDownload -URL $URL -OutFile $OutFile -Validate:$Validate -ChecksumType $ChecksumType -Checksum $Checksum
                 if ($result) {
                     Write-Log -Message "Download verification succeeded on attempt $attempt." -Severity 1 -Source ${CmdletName}
                     return
