@@ -1,6 +1,3 @@
-<#GLOBAL PARAMETERSET#>
-$Global:CDMLOGPATH = "$PSScriptRoot\CDM.log"
-$Global:CDMLOGTYPE = "Host"
 <#
 .SYNOPSIS
 Writes log messages to the host, a file, or both with optional severity levels and source tags.
