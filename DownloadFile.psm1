@@ -68,24 +68,12 @@ function Write-Log {
 
         [Parameter(Mandatory = $false)]
         [ValidateSet("Host", "File", "Full")]
-        [string]$LogOutput,
+        [string]$LogOutput = "Full",
 
         [Parameter(Mandatory = $false)]
-        [string]$LogFilePath
+        [string]$LogFilePath = "x:\windows\temp\smstslog\smsts.log"
     )
 
-    if (-not $LogOutput -and $Global:CDMLOGTYPE) {
-        $LogOutput = $Global:CDMLOGTYPE
-    }
-    elseif (-not $LogOutput) {
-        $LogOutput = "Host"
-    }
-    if (-not $LogFilePath -and $Global:CDMLOGPATH) {
-        $LogFilePath = $Global:CDMLOGPATH
-    }
-    elseif (-not $LogFilePath) {
-        $LogFilePath = "$PSScriptRoot\DownloadFile.log"
-    }
     
     $timestamp = Get-Date -Format "MM-dd-yyyy HH:mm:ss.fff"
     $component = if ($Source -ne "") { $Source } else { "General" }
