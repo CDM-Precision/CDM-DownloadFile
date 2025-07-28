@@ -884,7 +884,7 @@ function Invoke-FileDownload {
                     Write-Log -Message "Selected download method: Invoke-Webrequest" -Severity 1 -Source ${CmdletName}
                     Write-Log -Message "Start downloading from $link" -Severity 1 -Source ${CmdletName}
                     Write-Log -Message "File size: $([math]::Round(([Int64]"$downloadSize")/1MB,2))MB" -Severity 1 -Source ${CmdletName}
-                    Invoke-WebRequest -Source $link -Destination $OutFile
+                    Invoke-WebRequest -Uri $link -OutFile $OutFile
                 }
                 catch {
                     Write-Log -Message "Failed to transfer with Invoke-WebRequest. Here is the error message:" -Severity 1 -Source ${CmdletName}
