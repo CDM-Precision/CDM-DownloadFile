@@ -57,7 +57,8 @@ This function supports structured logging using a custom delimiter (`0) for easi
 function Write-Log {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true, Position = 0)]
+        [Parameter(Position = 0)]
+        [ValidateNotNullOrEmpty()]
         [String]$Message,
 
         [Parameter(Mandatory = $false)]
