@@ -71,7 +71,7 @@ function Write-Log {
         [string]$LogOutput = "Full",
 
         [Parameter(Mandatory = $false)]
-        [string]$LogFilePath = "x:\windows\temp\smstslog\smsts.log"
+        [string]$LogFilePath = "c:\OSDCloud\Logs\DownloadFile.log"
     )
 
     
