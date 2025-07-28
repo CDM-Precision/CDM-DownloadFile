@@ -871,6 +871,27 @@ function Invoke-FileDownload {
                     throw
                 }
             }
+            else{
+                try{
+                    $link = Get-FinalRedirectUrl $URL
+                    if ($PSVersionTable.PSVersion.Major -lt 6) {
+						$requestedFile = (Invoke-WebRequest $link -Method Head -UseBasicParsing).Headers
+					} else {
+						$requestedFile = (Invoke-WebRequest $link -Method Head).Headers
+					}
+                    #$downloadSize = $requestedFile.'Content-Length'
+                    $downloadSize = [Int64]::Parse(($requestedFile.'Content-Length' | Select-Object -First 1))
+                    Write-Log -Message "Selected download method: Invoke-Webrequest" -Severity 1 -Source ${CmdletName}
+                    Write-Log -Message "Start downloading from $link" -Severity 1 -Source ${CmdletName}
+                    Write-Log -Message "File size: $([math]::Round(([Int64]"$downloadSize")/1MB,2))MB" -Severity 1 -Source ${CmdletName}
+                    Invoke-WebRequest -Source $link -Destination $OutFile
+                }
+                catch {
+                    Write-Log -Message "Failed to transfer with Invoke-WebRequest. Here is the error message:" -Severity 1 -Source ${CmdletName}
+                    Write-Log -Message "$($error[0].exception.message)" -Severity 1 -Source ${CmdletName}
+                    throw
+                }
+            }
 
             If (Test-Path -Path $OutFile) {
                 Write-Log -Message "Time taken: $((Get-Date).Subtract($start_time).Minutes) minute(s) $((Get-Date).Subtract($start_time).Seconds) second(s)" -Severity 1 -Source ${CmdletName}
