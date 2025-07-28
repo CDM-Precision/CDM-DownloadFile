@@ -851,7 +851,7 @@ function Invoke-FileDownload {
 
         $start_time = Get-Date
         try {
-            If (Get-Command Start-BitsTransfer -ErrorAction SilentlyContinue) {
+           <#If (Get-Command Start-BitsTransfer -ErrorAction SilentlyContinue) {
                 try {
                     $link = Get-FinalRedirectUrl $URL
                     if ($PSVersionTable.PSVersion.Major -lt 6) {
@@ -872,7 +872,7 @@ function Invoke-FileDownload {
                 }
             }
             else{
-                try{
+             #>   try{
                     $link = Get-FinalRedirectUrl $URL
                     if ($PSVersionTable.PSVersion.Major -lt 6) {
 						$requestedFile = (Invoke-WebRequest $link -Method Head -UseBasicParsing).Headers
@@ -891,7 +891,7 @@ function Invoke-FileDownload {
                     Write-Log -Message "$($error[0].exception.message)" -Severity 1 -Source ${CmdletName}
                     throw
                 }
-            }
+            #}
 
             If (Test-Path -Path $OutFile) {
                 Write-Log -Message "Time taken: $((Get-Date).Subtract($start_time).Minutes) minute(s) $((Get-Date).Subtract($start_time).Seconds) second(s)" -Severity 1 -Source ${CmdletName}
